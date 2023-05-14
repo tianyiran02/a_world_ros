@@ -54,6 +54,7 @@ class ImageConverter:
                 ],
                 dtype=np.float32,
             )
+
         gray = cv.cvtColor(cv_image, cv.COLOR_BGR2GRAY)
         # detect aruco marker
         ret = cv.aruco.detectMarkers(gray, self.aruco_dict, parameters=self.aruo_params)

@@ -3,6 +3,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <sstream> // for converting the command line parameter to integer,用于将命令行参数转换为整数
+#include <boost/array.hpp>
 
 int main(int argc, char **argv)
 {
@@ -45,6 +46,27 @@ int main(int argc, char **argv)
     sensor_msgs::ImagePtr msg_ptr;
     sensor_msgs::CameraInfo info_msg;
 
+    // assemble the camera info
+    // known that camera height 1944, width 2592. Assume there is no distortion.
+    info_msg.header.frame_id = "joint6_flange";
+    info_msg.height = 1944;
+    info_msg.width = 2592;
+    info_msg.distortion_model = "plumb_bob";
+    std::vector<double> D{0, 0, 0, 0, 0, 0};
+    boost::array<double, 9> K = {
+        2592, 0, 1296,
+        0, 2592, 972,
+        0, 0, 1,
+    };
+    boost::array<double, 12> P = {
+        2592, 0, 1296, 0,
+        0, 2592, 972, 0,
+        0, 0, 1, 0,
+    };
+    info_msg.D = D;
+    info_msg.K = K;
+    info_msg.P = P;
+
     while (nh.ok())
     {
         cap >> frame;
@@ -56,7 +78,8 @@ int main(int argc, char **argv)
             msg_ptr->header.frame_id = "joint6_flange";
             pub.publish(msg_ptr);
 
-            info_msg.header.frame_id = "joint6_flange";
+
+
             cam_info_pub.publish(info_msg);
             //cv::Wait(1);
         }
