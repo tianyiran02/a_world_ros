@@ -20,14 +20,14 @@ class ImageConverter:
     def __init__(self):
         self.br = TransformBroadcaster()
         self.bridge = CvBridge()
-        self.aruco_dict = cv.aruco.Dictionary_get(cv.aruco.DICT_6X6_250)
+        self.aruco_dict = cv.aruco.Dictionary_get(cv.aruco.DICT_4X4_100)
         self.aruo_params = cv.aruco.DetectorParameters_create()
         calibrationParams = cv.FileStorage(
             "calibrationFileName.xml", cv.FILE_STORAGE_READ
         )
         self.dist_coeffs = calibrationParams.getNode("distCoeffs").mat()
         self.camera_matrix = None
-        # subscriber, listen wether has img come in. 订阅者，监听是否有img
+        # subscriber, listen wether has img come in
         self.image_sub = rospy.Subscriber("/camera/image", Image, self.callback)
 
     def callback(self, data):
@@ -37,7 +37,7 @@ class ImageConverter:
         pose to transforming.
         """
         try:
-            # trans `rgb` to `gbr` for opencv. 将 `rgb` 转换为 opencv 的 `gbr`。
+            # trans `rgb` to `gbr` for opencv
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
@@ -45,7 +45,7 @@ class ImageConverter:
         focal_length = size[1]
         center = [size[1] / 2, size[0] / 2]
         if self.camera_matrix is None:
-            # calc the camera matrix, if don't have.如果没有，则计算相机矩阵
+            # calc the camera matrix, if don't have
             self.camera_matrix = np.array(
                 [
                     [focal_length, 0, center[0]],
@@ -55,18 +55,18 @@ class ImageConverter:
                 dtype=np.float32,
             )
         gray = cv.cvtColor(cv_image, cv.COLOR_BGR2GRAY)
-        # detect aruco marker.检测 aruco 标记
+        # detect aruco marker
         ret = cv.aruco.detectMarkers(gray, self.aruco_dict, parameters=self.aruo_params)
         corners, ids = ret[0], ret[1]
-        # process marker data.处理标记数据
+        # process marker data
         if len(corners) > 0:
             if ids is not None:
                 # print('corners:', corners, 'ids:', ids)
 
-                # detect marker pose. 检测marker位姿。
+                # detect marker pose.
                 # argument:
-                #   marker corners,标记角
-                #   marker size (meter),标记尺寸（米）
+                #   marker corners
+                #   marker size (meter)
                 ret = cv.aruco.estimatePoseSingleMarkers(
                     corners, 0.05, self.camera_matrix, self.dist_coeffs
                 )
@@ -75,7 +75,7 @@ class ImageConverter:
 
                 print("rvec:", rvec, "tvec:", tvec)
 
-                # just select first one detected marker.只需选择第一个检测到的标记。
+                # just select first one detected marker
                 for i in range(rvec.shape[0]):
                     cv.aruco.drawDetectedMarkers(cv_image, corners)
                     cv.aruco.drawAxis(
@@ -90,20 +90,34 @@ class ImageConverter:
                 xyz = tvec[0, 0, :]
                 xyz = [xyz[0] - 0.045, xyz[1], xyz[2] - 0.03]
 
-                # get quaternion for ros. 为ros获取四元数
+                # get quaternion for ros
                 euler = rvec[0, 0, :]
                 tf_change = tf.transformations.quaternion_from_euler(
                     euler[0], euler[1], euler[2]
                 )
                 print("tf_change:", tf_change)
 
-                # trans pose according [joint1]，根据 [joint1] 变换姿势
+                # trans pose according [joint1]
                 self.br.sendTransform(
                     xyz, tf_change, rospy.Time.now(), "basic_shapes", "joint6_flange"
                 )
 
         # [x, y, z, -172, 3, -46.8]
-        cv.imshow("Image", cv_image)
+        # Get original dimensions
+        height, width = cv_image.shape[:2]
+
+        # Define resize ratio
+        ratio = 0.25
+
+        # Compute new dimensions
+        new_height = int(height * ratio)
+        new_width = int(width * ratio)
+
+        # Resize image
+        resized_img = cv.resize(cv_image, (new_width, new_height))
+
+        # Display resized image
+        cv.imshow('Marker Detection Image', resized_img)
 
         cv.waitKey(3)
         try:
