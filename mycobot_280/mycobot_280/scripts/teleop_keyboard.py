@@ -10,7 +10,7 @@ import time
 
 import roslib
 
-# Terminal output prompt information. 终端输出提示信息
+# Terminal output prompt information.
 msg = """\
 Mycobot Teleop Keyboard Controller
 ---------------------------
@@ -97,10 +97,10 @@ def teleop_keyboard():
     try:
         print(msg)
         print(vels(speed, change_percent))
-        # Keyboard keys call different motion functions. 键盘按键调用不同的运动功能
+        # Keyboard keys call different motion functions.
         while 1:
             try:
-                # print("\r current coords: %s" % record_coords, end="")
+                print("\r current coords: %s" % record_coords, end="")
                 with Raw(sys.stdin):
                     key = sys.stdin.read(1)
                 if key == "q":
@@ -160,7 +160,7 @@ def teleop_keyboard():
                     continue
 
             except Exception as e:
-                # print(e)
+                print(e)
                 continue
 
     except Exception as e:

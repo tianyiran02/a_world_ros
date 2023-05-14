@@ -7,7 +7,24 @@ void imageCallback(const sensor_msgs::ImageConstPtr &msg)
 {
 	try
 	{
-		cv::imshow("view", cv_bridge::toCvShare(msg, "bgr8")->image);
+		cv::Mat img = cv_bridge::toCvCopy(msg, "bgr8")->image;
+
+		// Get original dimensions
+		int height = img.rows;
+		int width = img.cols;
+
+		// Define resize ratio
+		double ratio = 0.25;
+
+		// Compute new dimensions
+		int new_height = static_cast<int>(height * ratio);
+		int new_width = static_cast<int>(width * ratio);
+
+		// Resize image
+		cv::Mat resized_img;
+    	cv::resize(img, resized_img, cv::Size(new_width, new_height));
+
+		cv::imshow("view", resized_img);
 		cv::waitKey(30);
 	}
 	catch (cv_bridge::Exception &e)
