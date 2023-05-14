@@ -7,15 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
-        - /TF1
         - /TF1/Frames1
-        - /TF1/Tree1/joint11
-        - /TF1/Tree1/joint11/joint21
-        - /TF1/Tree1/joint11/joint21/joint31
-        - /TF1/Tree1/joint11/joint21/joint31/joint41
-        - /TF1/Tree1/joint11/joint21/joint31/joint41/joint51
-        - /TF1/Tree1/joint11/joint21/joint31/joint41/joint51/joint61
-        - /TF1/Tree1/joint11/joint21/joint31/joint41/joint51/joint61/joint6_flange1
         - /Marker1
         - /Marker1/Namespaces1
         - /Camera1
@@ -40,7 +32,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Camera
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -169,7 +161,7 @@ Visualization Manager:
       Image Topic: /camera/image
       Name: Camera
       Overlay Alpha: 0.5
-      Queue Size: 100
+      Queue Size: 10
       Transport Hint: raw
       Unreliable: false
       Value: true
@@ -208,7 +200,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.3208775520324707
+      Distance: 4.315761566162109
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

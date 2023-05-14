@@ -117,9 +117,9 @@ class ImageConverter:
         resized_img = cv.resize(cv_image, (new_width, new_height))
 
         # Display resized image
-        cv.imshow('Marker Detection Image', resized_img)
+        # cv.imshow('Marker Detection Image', resized_img)
 
-        cv.waitKey(3)
+        # cv.waitKey(3)
         try:
             pass
         except CvBridgeError as e:

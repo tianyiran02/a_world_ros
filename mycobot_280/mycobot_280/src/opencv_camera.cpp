@@ -18,6 +18,9 @@ int main(int argc, char **argv)
     image_transport::ImageTransport it(nh);
     image_transport::Publisher pub = it.advertise("camera/image", 1); // Publish topic，发布话题
 
+    // added camera info topic
+    ros::Publisher cam_info_pub = nh.advertise<sensor_msgs::CameraInfo>("camera/camera_info", 1);
+
     ros::Rate loop_rate(200); // refresh Hz.
 
     // Convert the passed as command line parameter index for the video device to an integer，
@@ -39,7 +42,8 @@ int main(int argc, char **argv)
         return 1;
     }
     cv::Mat frame;
-    sensor_msgs::ImagePtr msg;
+    sensor_msgs::ImagePtr msg_ptr;
+    sensor_msgs::CameraInfo info_msg;
 
     while (nh.ok())
     {
@@ -48,8 +52,12 @@ int main(int argc, char **argv)
         // Check if grabbed frame is actually full with some content，检查抓取的帧是否实际上充满了一些内容
         if (!frame.empty())
         {
-            msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
-            pub.publish(msg);
+            msg_ptr = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
+            msg_ptr->header.frame_id = "joint6_flange";
+            pub.publish(msg_ptr);
+
+            info_msg.header.frame_id = "joint6_flange";
+            cam_info_pub.publish(info_msg);
             //cv::Wait(1);
         }
         ros::spinOnce();
