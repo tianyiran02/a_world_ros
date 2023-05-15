@@ -25,7 +25,7 @@ def callback(data):
     for index, value in enumerate(data.position):
         data_list.append(value)
 
-    mc.send_radians(data_list, 80)
+    mc.send_radians(data_list, 20)
     # time.sleep(0.5)
 
 

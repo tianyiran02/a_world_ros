@@ -165,7 +165,7 @@ def grippercallback(data):
 
         time.sleep(0.5)
 
-        pub_angles(0, 30, -50, -40, 0, 0, 50)
+        pub_angles(0, 33, 30, 27, 0, 0, 10)
         time.sleep(1.5)
 
         # finally
@@ -175,7 +175,7 @@ def grippercallback(data):
 def main():
     for _ in range(10):
         # pub_coords(150, 20, 220, -175, 0, -90, 70, 2)
-        pub_angles(0, 30, -50, -40, 0, 0, 50)
+        pub_angles(0, 33, 30, 27, 0, 0, 10)
         #     pub_angles(random.randint(-30, 30), random.randint(-30, 30), random.randint(-30, 30), random.randint(-30, 30), random.randint(-30, 30), random.randint(-30, 30), 70)
         time.sleep(0.5)
 
