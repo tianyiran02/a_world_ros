@@ -22,7 +22,7 @@ def talker():
 
     print("publishing ...")
     while not rospy.is_shutdown():
-        now = rospy.Time.now() - rospy.Duration(0.1)
+        now = rospy.Time.now() - rospy.Duration(2.0)
 
         try:
             trans, rot = listener.lookupTransform("joint1", "basic_shapes", now)

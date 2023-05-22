@@ -89,7 +89,7 @@ class ImageConverter:
                     )
 
                 xyz = tvec[0, 0, :]
-                xyz = [xyz[0] - 0.045, xyz[1], -1.0 * (xyz[2] - 0.03)]
+                xyz = [-1.0 * (xyz[0] - 0.045), xyz[1], -1.0 * (xyz[2] - 0.03)]
 
                 # get quaternion for ros
                 euler = rvec[0, 0, :]

@@ -48,7 +48,7 @@ temp_x = temp_y = temp_z = 0.0
 temp_time = time.time()
 
 
-def pub_coords(x, y, z, rx=-150, ry=10, rz=-90, sp=70, m=2):
+def pub_coords(x, y, z, rx=0, ry=0, rz=-35, sp=70, m=2):
     """Post coordinates,发布坐标"""
     coords.x = x
     coords.y = y
@@ -138,6 +138,7 @@ def grippercallback(data):
         y += y_offset
         z = z + 88 + z_offset
 
+        print(x,y,z)
         pub_coords(x, y, z)
         time.sleep(2.5)
         print("CP6!")
@@ -148,7 +149,7 @@ def grippercallback(data):
         print("CP7!")
         time.sleep(2)
 
-        pub_pump(True, Pin)
+        # pub_pump(True, Pin)
         # pump on
         print("CP8!")
         pub_coords(x, y, z + 20, -165)
